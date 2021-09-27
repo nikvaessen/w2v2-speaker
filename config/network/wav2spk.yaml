@@ -1,0 +1,20 @@
+# instantiate the x-vector network lightning module config object
+_target_: src.lightning_modules.speaker.wav2spk.Wav2SpkModuleConfig
+
+# whether to use temporal gating after the feature encoder
+apply_temporal_gating: true
+
+# structure of fc head (excluding the last layer, which always has NUM_SPEAKERS
+# output nodes
+hidden_fc_layers_out:
+  - 512
+  - 128
+
+# Which FC hidden layer to use as speaker embedding for EER evaluation
+# should be a valid index from the list `hidden_fc_layers_out`,
+# or (len(hidden_fc_layers_out) + 1) to use the softmax output as speaker embedding,
+# or -1 when you want to use the stat-pooled wav2vec embeddings
+embedding_layer_idx: 0
+
+# which type of statistical pooling to use ('mean' or 'mean+std')
+stat_pooling_type: mean+std

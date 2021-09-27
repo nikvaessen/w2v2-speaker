@@ -1,0 +1,60 @@
+# preprocessors to apply to training data
+train_pipeline:
+  - selector_contiguous
+  - augmenter
+  - filterbank
+  - normalizer
+
+# preprocessors to apply to validation data
+val_pipeline:
+  - selector_start
+  - filterbank
+  - normalizer
+
+# preprocessors to apply to test data
+test_pipeline:
+  # assume batch size of 1 due to no selector (and therefore tensors have
+  # different dimensions and cannot be collated without padding
+  - filterbank
+  - normalizer
+
+# define all the augmentations to add to the `augmenter`
+augmentations:
+  - augment_add_rirs
+
+# selects a random audio chunk
+selector_contiguous:
+  _target_: src.data.preprocess.random_chunks.AudioChunkSelector
+  # one of 'start', 'end', 'random', 'random_contiguous', 'contiguous'
+  selection_strategy: contiguous
+  desired_chunk_length_sec: 3
+
+# selects the first x seconds of audio
+selector_start:
+  _target_: src.data.preprocess.random_chunks.AudioChunkSelector
+  # one of 'start', 'end', 'random', 'random_contiguous'
+  selection_strategy: start
+  desired_chunk_length_sec: 3
+
+# converts wav to mel filterbanks
+filterbank:
+  _target_: src.data.preprocess.audio_features.FilterBank
+
+# normalizes filterbanks to 0 mean and unit variance
+normalizer:
+  _target_: src.data.preprocess.input_normalisation.InputNormalizer2D
+  normalize_over_channels: true
+
+# augmentation preprocessors to use
+augmenter:
+  _target_: src.data.preprocess.augment.Augmenter
+  yield_intermediate_augmentations: True
+  yield_unaugmented: True
+  stack_augmentations: False
+
+# randomly drop `x` seconds of audio
+augment_add_rirs:
+  _target_: src.data.preprocess.augment.ChoiceRirsNoiseAugment
+  sample_rate: 16000
+  snr_choices: [5]
+  shards_folder: ${data_folder}/rirs_shards

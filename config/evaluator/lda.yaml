@@ -1,0 +1,17 @@
+_target_: src.evaluation.lda.LDAEvaluator
+
+# whether to center embeddings before calculating cosine score
+center_before_scoring: True
+
+# whether to length-normalize embeddings before calculating cosine score
+length_norm_before_scoring: True
+
+# maximum number of samples to use to fit mean/std parameters
+# when `use_centering` is True
+max_training_batches_to_fit: 30000 # exhaust a single training epoch
+
+# number of PCA components
+num_pca_components: 150
+
+# center the training batches before training LDA model
+center_before_fit_training_batches: true

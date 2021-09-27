@@ -1,0 +1,27 @@
+[2021-09-16 14:16:33,601][pytorch_lightning.utilities.seed][INFO] - Global seed set to 42133724
+[2021-09-16 14:16:34,332][src.main][INFO] - Using callback <<pytorch_lightning.callbacks.lr_monitor.LearningRateMonitor object at 0x7fe13117ae50>>
+[2021-09-16 14:16:34,332][src.main][INFO] - Using callback <<src.callbacks.memory_monitor.RamMemoryMonitor object at 0x7fe13117abe0>>
+[2021-09-16 14:16:34,333][src.main][INFO] - Using callback <<pytorch_lightning.callbacks.model_checkpoint.ModelCheckpoint object at 0x7fe13117d7f0>>
+[2021-09-16 14:16:34,338][pytorch_lightning.utilities.distributed][INFO] - GPU available: True, used: True
+[2021-09-16 14:16:34,338][pytorch_lightning.utilities.distributed][INFO] - TPU available: False, using: 0 TPU cores
+[2021-09-16 14:16:34,338][pytorch_lightning.utilities.distributed][INFO] - IPU available: False, using: 0 IPUs
+[2021-09-16 14:16:34,366][pytorch_lightning.accelerators.gpu][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+[2021-09-16 14:16:36,535][pytorch_lightning.core.lightning][INFO] - 
+  | Name              | Type             | Params
+-------------------------------------------------------
+0 | loss_fn           | CrossEntropyLoss | 0     
+1 | metric_train_acc  | Accuracy         | 0     
+2 | metric_train_loss | AverageMeter     | 0     
+3 | metric_valid_acc  | Accuracy         | 0     
+4 | feature_extractor | Xvector          | 4.3 M 
+5 | classifier        | Classifier       | 885 K 
+-------------------------------------------------------
+5.1 M     Trainable params
+0         Non-trainable params
+5.1 M     Total params
+20.554    Total estimated model params size (MB)
+[2021-09-16 14:16:40,831][pytorch_lightning.utilities.seed][INFO] - Global seed set to 42133724
+[2021-09-16 14:18:51,476][pytorch_lightning.tuner.lr_finder][INFO] - LR finder stopped early after 4418 steps due to diverging loss.
+[2021-09-16 14:18:51,479][pytorch_lightning.utilities.distributed][INFO] - Restoring states from the checkpoint file at /home/nik/workspace/phd/data/logs/wav2vec_speaker_identification/run/2021-09-16_14-16-31/f47df09ca90443d3b2dd5ffffcc8d60c/lr_find_temp_model.ckpt
+[2021-09-16 14:18:51,499][pytorch_lightning.utilities.distributed][INFO] - Restored all states from the checkpoint file at /home/nik/workspace/phd/data/logs/wav2vec_speaker_identification/run/2021-09-16_14-16-31/f47df09ca90443d3b2dd5ffffcc8d60c/lr_find_temp_model.ckpt
+[2021-09-16 14:18:51,502][pytorch_lightning.tuner.lr_finder][INFO] - Learning rate set to 0.0021281390459827135

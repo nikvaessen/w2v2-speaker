@@ -1,0 +1,15 @@
+# instantiate the config object
+_target_: src.data.common.WebDataSetShardConfig
+
+# amount of training samples stored per shard
+samples_per_shard: 5000
+
+# whether to compress the shards
+use_gzip_compression: true
+
+# whether to use shards in random order
+shuffle_shards: True
+
+# queue from which samples are extracted
+# in order to create batches with higher variance
+queue_size: 1024

@@ -1,0 +1,24 @@
+to_add:
+  - lr_monitor
+  - ram_monitor
+  - checkpoint
+
+# keep track of learning rate in logger
+lr_monitor:
+  _target_: pytorch_lightning.callbacks.LearningRateMonitor
+
+ram_monitor:
+  _target_: src.callbacks.memory_monitor.RamMemoryMonitor
+  frequency: 100
+
+# save model checkpoint of weights with best validation performance
+checkpoint:
+  _target_: pytorch_lightning.callbacks.model_checkpoint.ModelCheckpoint
+  monitor: val_wer_clean
+  save_top_k: 1
+  mode: min
+  filename: '{epoch}.{step}.{val_wer_clean:.4f}.best'
+  save_last: true
+  every_n_val_epochs: 1
+
+last_checkpoint_pattern: '{epoch}.{step}.{val_wer_clean:.4f}.last'

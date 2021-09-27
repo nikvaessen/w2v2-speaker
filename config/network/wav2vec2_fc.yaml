@@ -1,0 +1,73 @@
+# instantiate the x-vector network lightning module config object
+_target_: src.lightning_modules.speaker.wav2vec2_fc.Wav2vec2FCModuleConfig
+
+# pretrained weights of wav2vec model
+wav2vec_hunggingface_id: "facebook/wav2vec2-base"
+
+# whether to use reset the pretrained weights
+# and start from a fresh initialization
+reset_weights: false
+
+# settings related to wav2vec2 architecture
+wav2vec_feature_encoder_only: false
+
+# whether to freeze the feature encoder part
+# of the network for the whole training run
+completely_freeze_feature_extractor: true
+
+# initially freeze wav2vec model
+wav2vec_initially_frozen: false
+
+# number of steps before the wav2vec model is unfrozen
+# (if initially frozen at all)
+# if set to null, wav2vec will never be unfrozen
+num_frozen_steps: 10000
+
+# structure of fc head (excluding the last layer, which is always NUM_SPEAKERS soft max
+# classification)
+hidden_fc_layers_out:
+  [] # empty list means we have only 1 fc layer with NUM_SPEAKER (softmax) embeddings
+#  - 1024
+#  - 512
+
+# Which hidden layer to use as speaker embedding for EER evaluation
+# should be a valid index from the list `hidden_fc_layers_out`,
+# or (len(hidden_fc_layers_out) + 1) to use the softmax output as speaker embedding,
+# or -1 when you want to use the stat-pooled wav2vec embeddings
+embedding_layer_idx: -1
+
+# which type of statistical pooling to use ('mean', 'mean+std' or 'attentive')
+stat_pooling_type: mean+std
+test_stat_pooling_type: ${network.stat_pooling_type}
+
+# probability of regularization techniques during training
+# dropout
+activation_dropout: 0.0  # in feed-forward module of transformer layer
+attention_dropout: 0.1 # in attention module of transformer layer
+feat_proj_dropout: 0.1 # in feature projection module
+hidden_dropout: 0.1 # between residual connections in transformer layer
+
+# layer skip in transformer
+layerdrop: 0.05
+
+# specaugment
+# feature
+mask_feature_length: 10
+mask_feature_prob: 0.0
+
+# time
+mask_time_length: 10
+mask_time_prob: 0.05
+
+# augment on FINAL TOKENS
+final_channel_mask_prob: 0
+final_channel_mask_width: 5
+
+# optional explicit overwrite of embedding size and/or num speakers
+# (e.g if you need to load finetuned weights but want to experiment with another
+# pooling type in the evaluation or test on a dataset with different num speakers)
+explicit_stat_pool_embedding_size: null
+explicit_num_speakers: null
+
+use_transformers_as_ensembles: False
+num_ensembles: 1

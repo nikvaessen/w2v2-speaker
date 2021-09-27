@@ -1,0 +1,16 @@
+_target_:  torch.optim.SGD
+
+# learning rate
+lr: 3e-3
+
+# momentum:
+momentum: 0.9
+
+# weight decay (l2 regression)
+weight_decay: 0
+
+# momentum dampening
+dampening: 0
+
+# nesterov
+nesterov: True

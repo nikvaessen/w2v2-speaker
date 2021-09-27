@@ -1,0 +1,14 @@
+_target_: src.evaluation.plda.PLDAEvaluator
+
+# number of PCA components
+num_lda_pca_components: 50
+
+# number of PCA components
+num_plda_pca_components: 50
+
+# number of iterations to train PLDA for
+max_iterations: 1
+
+# maximum number of samples to use to fit mean/std parameters
+# when `use_centering` is True
+max_training_batches_to_fit: 300  # exhaust a single training epoch

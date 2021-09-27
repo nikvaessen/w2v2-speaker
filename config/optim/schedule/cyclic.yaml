@@ -1,0 +1,35 @@
+# the scheduler object to use
+scheduler:
+  _target_: torch.optim.lr_scheduler.CyclicLR
+
+  # the lowest lr in the cycle
+  base_lr: 1e-4
+
+  # the peak lr in the cycle
+  max_lr: 0.02
+
+  # number of steps to go from base_lr to max_lr
+  step_size_up: 2500
+
+  # number of steps to go from max+lr to base_lr
+  step_size_down: 2500
+
+  # Adam doesn't have `momentum` parameter, can only be true with SGD
+  cycle_momentum: False
+
+  # shape of line (triangular=linearly increasing/decreasing)
+  mode: triangular
+
+# optional value to track which is fed into the step() call
+# only relevant for learning rate schedulers such
+# as `reduce on plateau`
+monitor: null
+
+# whether to step every epoch or every step
+interval: step
+
+# amount of epochs/steps between consecutive step() calls
+frequency: null
+
+# name to log the learning rate as
+name: null

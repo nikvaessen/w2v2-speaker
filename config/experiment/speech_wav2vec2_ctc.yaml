@@ -1,0 +1,24 @@
+# @package _global_
+
+defaults:
+  - override /callbacks: default_speech
+  - override /data/module: librispeech
+  - override /data/pipeline: wav2vec_full_seq_pipeline
+  - override /data/dataloader: speech
+  - override /data/shards: shards_librispeech
+  - override /network: wav2vec2_fc_letter
+  - override /tokenizer: default
+  - override /optim/algo: adam
+  - override /optim/schedule: one_cycle
+  - override /optim/loss: ctc
+  - override /trainer: trainer
+
+trainer:
+  max_steps: 100_000
+  precision: 16
+
+project_name: wav2vec2-librispeech
+
+optim:
+  algo:
+    lr: 1e-4

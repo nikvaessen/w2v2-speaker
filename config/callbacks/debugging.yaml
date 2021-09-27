@@ -1,0 +1,15 @@
+to_add:
+  - input_monitor
+  - lr_monitor
+#  - gpu_monitor
+
+# log debug information for a single batch
+input_monitor:
+  _target_: src.callbacks.input_monitor_callback.InputMonitor
+
+# keep track of learning rate in logger
+lr_monitor:
+  _target_: pytorch_lightning.callbacks.LearningRateMonitor
+
+gpu_monitor:
+  _target_: pytorch_lightning.callbacks.GPUStatsMonitor

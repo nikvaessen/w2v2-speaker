@@ -1,0 +1,36 @@
+# instantiate the x-vector network lightning module config object
+_target_: src.lightning_modules.speaker.wav2vec_fc.Wav2vecFCModuleConfig
+
+# pretrained weights of wav2vec model
+wav2vec_model_path: ${data_folder}/pretrained_models/wav2vec/wav2vec_large.pt
+
+# whether to use the aggregation layers in wav2vec model
+use_aggregation_layers: true
+
+# whether to use reset the pretrained weights
+# and start from a fresh initialization
+reset_weights: false
+
+# initially freeze wav2vec model
+wav2vec_initially_frozen: true
+
+# number of steps before the wav2vec model is unfrozen
+# (if initially frozen at all)
+# if set to null, wav2vec will never be unfrozen
+num_frozen_steps: 10000
+
+# structure of fc head (excluding the last layer, which is always NUM_SPEAKERS soft max
+# classification)
+hidden_fc_layers_out:
+  - 1024
+  - 512
+#  [] # empty list means we have only 1 fc layer with NUM_SPEAKER (softmax) embeddings
+
+# Which hidden layer to use as speaker embedding for EER evaluation
+# should be a valid index from the list `hidden_fc_layers_out`,
+# or (len(hidden_fc_layers_out) + 1) to use the softmax output as speaker embedding,
+# or -1 when you want to use the stat-pooled wav2vec embeddings
+embedding_layer_idx: 1
+
+# which type of statistical pooling to use ('mean' or 'mean+std')
+stat_pooling_type: mean+std

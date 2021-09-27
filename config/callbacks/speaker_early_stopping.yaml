@@ -1,0 +1,35 @@
+to_add:
+  - lr_monitor
+  - ram_monitor
+  - checkpoint
+  - early_stopping
+
+# keep track of learning rate in logger
+lr_monitor:
+  _target_: pytorch_lightning.callbacks.LearningRateMonitor
+
+ram_monitor:
+  _target_: src.callbacks.memory_monitor.RamMemoryMonitor
+  frequency: 100
+
+# save model checkpoint of weights with best validation performance
+checkpoint:
+  _target_: pytorch_lightning.callbacks.model_checkpoint.ModelCheckpoint
+  monitor: val_eer
+  save_top_k: 0
+  mode: min
+  filename: '{epoch}.{step}.{val_eer:.4f}.best'
+  save_last: false
+  every_n_val_epochs: 1
+
+last_checkpoint_pattern: '{epoch}.{step}.{val_eer:.4f}.last'
+
+# stop when val_eer doesn't improve or diverges
+early_stopping:
+  _target_: pytorch_lightning.callbacks.early_stopping.EarlyStopping
+  monitor: val_eer
+  min_delta: 0.00
+  patience: 4
+  mode: min
+  check_finite: True
+  divergence_threshold: 0.45

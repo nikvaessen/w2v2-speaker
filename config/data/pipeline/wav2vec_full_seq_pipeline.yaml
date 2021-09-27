@@ -1,0 +1,29 @@
+train_pipeline:
+  - normalizer
+
+val_pipeline:
+  - normalizer
+
+test_pipeline:
+  # assume batch size of 1 due to no selector (and therefore tensors have
+  # different dimensions and cannot be collated without padding
+  - normalizer
+
+selector_contiguous:
+  _target_: src.data.preprocess.random_chunks.AudioChunkSelector
+  # one of 'start', 'end', 'random', 'random_contiguous', 'contiguous'
+  selection_strategy: contiguous
+  desired_chunk_length_sec: 3
+
+selector_start:
+  _target_: src.data.preprocess.random_chunks.AudioChunkSelector
+  # one of 'start', 'end', 'random', 'random_contiguous'
+  selection_strategy: start
+  desired_chunk_length_sec: 3
+
+filterbank:
+  _target_: src.data.preprocess.audio_features.FilterBank
+
+normalizer:
+  _target_: src.data.preprocess.input_normalisation.InputNormalizer2D
+  normalize_over_channels: false

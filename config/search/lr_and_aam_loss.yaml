@@ -1,0 +1,51 @@
+# @package _global_
+
+defaults:
+  - override /hydra/sweeper: optuna
+  - override /hydra/sweeper/sampler: tpe
+  - override /callbacks: speaker_early_stopping
+  - override /optim/loss: aam_softmax
+
+hydra:
+  sweeper:
+    sampler:
+      seed: 123
+      n_startup_trials: 48
+      multivariate: true
+
+    direction: minimize
+    study_name: lr_and_schedule_search
+    storage: null
+    n_trials: 128
+    n_jobs: 8
+
+    search_space:
+      optim.loss.margin:
+        type: float
+        low: 0
+        high: 10
+      optim.loss.scale:
+        type: int
+        low: 1
+        high: 50
+      optim.algo.lr:
+        type: float
+        low: 1e-8
+        high: 1
+        log: true
+      optim.algo.weight_decay:
+        type: categorical
+        choices:
+          - 0
+          - 1e-12
+          - 1e-11
+          - 1e-10
+          - 1e-9
+          - 1e-8
+          - 1e-7
+          - 1e-6
+          - 1e-5
+          - 1e-4
+          - 1e-3
+          - 1e-2
+          - 1e-1

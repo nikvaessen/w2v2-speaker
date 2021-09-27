@@ -1,0 +1,11 @@
+_target_: src.evaluation.speaker.cosine_distance.CosineDistanceEvaluator
+
+# whether to center embeddings before calculating cosine score
+center_before_scoring: True
+
+# whether to length-normalize embeddings before calculating cosine score
+length_norm_before_scoring: True
+
+# maximum number of samples to use to fit mean/std parameters
+# when `use_centering` is True
+max_num_training_samples: 1000

@@ -1,0 +1,7 @@
+_target_: src.optim.loss.TripletCrossEntropyLoss
+
+# weighting which will be multiplied with cross-entropy loss
+c_ce: 1
+
+# weighting which will be multiplied with triplet loss
+c_triplet: 1

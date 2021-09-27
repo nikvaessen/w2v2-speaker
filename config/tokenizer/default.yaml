@@ -1,0 +1,3 @@
+_target_: src.tokenizer.tokenizer_wav2vec2.Wav2vec2TokenizerConfig
+
+tokenizer_huggingface_id: "facebook/wav2vec2-base-960h"

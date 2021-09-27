@@ -1,0 +1,50 @@
+defaults:
+  - data/module: voxceleb1
+  - data/pipeline: xvector_pipeline
+  - data/shards: shards_voxceleb
+  - data/dataloader: speaker
+  - evaluator: cosine_distance
+  - network: xvector
+  - optim/loss: cross_entropy
+  - tokenizer: default
+  - trainer: trainer
+
+# root directory with subfolders containing the canonical dataset(s)
+data_folder: ${oc.env:DATA_FOLDER}
+
+# directory for temporary storage
+temp_folder: ${oc.env:TEMP_FOLDER}
+
+# directory for slurm and hydra logs
+log_folder: ${oc.env:LOG_FOLDER}
+
+# random seed used by the experiment
+seed: 42133724
+
+# verify model (run e.g summary and BatchGradientVerification)
+verify_model: False
+
+# whether to load the weight of the networks from a checkpoint
+load_network_from_checkpoint: null
+
+# number of gpus to use
+gpus: ${oc.decode:${oc.env:NUM_GPUS}}
+
+# experiment name
+experiment_name: predict_pairs
+
+# path to folder which contains all files which need to be predicted
+predict_folder_path: ${data_folder}/voxsrc2021_val/wav
+
+# path to text file containing pairs which need to be evaluated
+pair_prediction_path: ${data_folder}/voxsrc2021_val/voxsrc2021_val.txt
+
+# config variables for hydra
+hydra:
+  run:
+    # set root output directory
+    dir: ${log_folder}/wav2vec_speaker_identification/run/${now:%Y-%m-%d_%H-%M-%S}/${experiment_name}
+  sweep:
+    # set root output directory
+    dir: ${log_folder}/wav2vec_speaker_identification/sweep/${now:%Y-%m-%d_%H-%M-%S}
+    subdir: ${experiment_name}

@@ -1,0 +1,27 @@
+# @package _global_
+
+profiler:
+  _target_: pytorch_lightning.profiler.SimpleProfiler
+  output_filename: simple_profile.txt
+
+trainer:
+  _target_: pytorch_lightning.Trainer
+
+  # set `1` to train on GPU, `0` to train on CPU only
+  gpus: ${gpus}
+
+  # minimum number of epochs to train for
+  min_epochs: 1
+
+  # maximum number of epochs to train for
+  max_epochs: 1
+
+  # do not output a progress bar if rate = 0
+  progress_bar_refresh_rate: 1
+
+  # amount of sanity validation steps to take before training starts
+  num_sanity_val_steps: 0
+
+callbacks:
+  to_add:
+    - gpu_monitor

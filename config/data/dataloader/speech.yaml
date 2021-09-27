@@ -1,0 +1,9 @@
+# instantiate the config object
+_target_: src.data.common.SpeechDataLoaderConfig
+
+# settings for data loader
+train_max_num_samples: 3_200_000
+val_batch_size: 8
+test_batch_size: 1
+num_workers: 5
+pin_memory: true

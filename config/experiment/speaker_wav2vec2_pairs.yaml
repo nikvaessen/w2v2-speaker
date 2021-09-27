@@ -1,0 +1,23 @@
+# @package _global_
+
+defaults:
+  - override /data/module: voxceleb2_pairs
+  - override /data/pipeline: wav2vec_pair_pipeline
+  - override /data/dataloader: speaker
+  - override /data/shards: shards_voxceleb
+  - override /network: wav2vec2_paired
+  - override /optim/algo: adam
+  - override /optim/schedule: one_cycle
+  - override /optim/loss: binary_cross_entropy
+  - override /trainer: trainer
+
+trainer:
+  max_steps: 100_000
+  val_check_interval: 5000
+  precision: 16
+
+data:
+  dataloader:
+    train_batch_size: 32
+
+project_name: wav2vec2-paired

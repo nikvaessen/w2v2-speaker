@@ -1,0 +1,15 @@
+# instantiate the x-vector network lightning module config object
+_target_: src.lightning_modules.speaker.xvector.XVectorModuleConfig
+
+tdnn_blocks: 5
+tdnn_channels: [512, 512, 512, 512, 1500]
+tdnn_kernel_sizes: [5, 3, 3, 1, 1]
+tdnn_dilations: [1, 2, 3, 1, 1]
+lin_neurons: 512
+in_channels: 40  # depends on values in data.pipeline
+
+# optional explicit overwrite of embedding size and/or num speakers
+# (e.g if you need to load finetuned weights but want to experiment with another
+# pooling type in the evaluation or test on a dataset with different num speakers)
+explicit_stat_pool_embedding_size: null
+explicit_num_speakers: null

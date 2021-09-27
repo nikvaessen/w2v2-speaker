@@ -1,0 +1,22 @@
+# instantiate the x-vector network lightning module config object
+_target_: src.lightning_modules.speaker.wav2vec_xvector.Wav2vecXVectorModuleConfig
+
+tdnn_blocks: 5
+tdnn_channels: [512, 512, 512, 512, 1500]
+tdnn_kernel_sizes: [5, 3, 3, 1, 1]
+tdnn_dilations: [1, 2, 3, 1, 1]
+lin_neurons: 512
+in_channels: 512  # wav2vec has 512 features
+
+# pretrained weights of wav2vec model
+wav2vec_model_path: ${data_folder}/pretrained_models/wav2vec/wav2vec_large.pt
+
+# whether to use the aggregation layers in wav2vec model
+use_aggregation_layers: true
+
+# initially freeze wav2vec model
+wav2vec_initially_frozen: true
+
+# number of steps before the wav2vec model is unfrozen
+# (if initially frozen at all)
+num_frozen_steps: 10000

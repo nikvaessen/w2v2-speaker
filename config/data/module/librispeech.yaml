@@ -1,0 +1,40 @@
+# instantiate the data module config object
+_target_: src.data.modules.speech.librispeech.LibriSpeechLightningDataModuleConfig
+
+# select which subset of the training data to use
+use_train_clean_100: true
+use_train_clean_360: true
+use_train_other_500: true
+
+# paths to training data
+train_clean_100_path: ${data_folder}/librispeech/train-clean-100.tar.gz
+train_clean_360_path: ${data_folder}/librispeech/train-clean-360.tar.gz
+train_other_500_path: ${data_folder}/librispeech/train-other-500.tar.gz
+
+# paths to validation data
+dev_clean_path: ${data_folder}/librispeech/dev-clean.tar.gz
+dev_other_path: ${data_folder}/librispeech/dev-other.tar.gz
+
+# paths to test data
+test_clean_path: ${data_folder}/librispeech/test-clean.tar.gz
+test_other_path: ${data_folder}/librispeech/test-other.tar.gz
+
+# folder to write train/val/test shards into
+shards_folder: ${data_folder}/librispeech_shards
+
+# temporary working directory for shard creation process
+extraction_folder: ${temp_folder}/librispeech
+
+# collation strategy
+train_collate_fn: default
+val_collate_fn: default
+test_collate_fn: default
+
+# add side info (in order to ease debugging data pipeline at the cost of
+# slowing down the iter/sec)
+add_side_info: False
+
+# limit the amount of samples to a certain amount - useful for debugging
+# whether a model can overfit on a small amount of data.
+# No limit when value is <= 0
+limit_samples: -1

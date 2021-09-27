@@ -1,0 +1,92 @@
+# preprocessors to apply to training data
+train_pipeline:
+  - selector_contiguous
+  - augmenter
+  - filterbank
+  - normalizer
+
+# preprocessors to apply to validation data
+val_pipeline:
+  - selector_start
+  - filterbank
+  - normalizer
+
+# preprocessors to apply to test data
+test_pipeline:
+  # assume batch size of 1 due to no selector (and therefore tensors have
+  # different dimensions and cannot be collated without padding
+  - filterbank
+  - normalizer
+
+# define all the augmentations to add to the `augmenter`
+augmentations:
+  - augment_drop_time
+  - augment_drop_freqs
+  - augment_change_speed
+  - augment_add_reverb
+  - augment_add_noise
+
+# selects a random audio chunk
+selector_contiguous:
+  _target_: src.data.preprocess.random_chunks.AudioChunkSelector
+  # one of 'start', 'end', 'random', 'random_contiguous', 'contiguous'
+  selection_strategy: contiguous
+  desired_chunk_length_sec: 3
+
+# selects the first x seconds of audio
+selector_start:
+  _target_: src.data.preprocess.random_chunks.AudioChunkSelector
+  # one of 'start', 'end', 'random', 'random_contiguous'
+  selection_strategy: start
+  desired_chunk_length_sec: 3
+
+# converts wav to mel filterbanks
+filterbank:
+  _target_: src.data.preprocess.audio_features.FilterBank
+
+# normalizes filterbanks to 0 mean and unit variance
+normalizer:
+  _target_: src.data.preprocess.input_normalisation.InputNormalizer2D
+  normalize_over_channels: true
+
+# augmentation preprocessors to use
+augmenter:
+  _target_: src.data.preprocess.augment.Augmenter
+  yield_intermediate_augmentations: True
+  yield_unaugmented: True
+  stack_augmentations: False
+
+# randomly drop `x` seconds of audio
+augment_drop_time:
+  _target_: src.data.preprocess.augment.TimeDropoutAugment
+  sample_rate: 16000
+  max_dropout_length_seconds: 0.25
+  min_drop_count: 0
+  max_drop_count: 5
+
+# randomly drops certain frequency bands from the audio signal
+augment_drop_freqs:
+  _target_: src.data.preprocess.augment.FrequencyDropoutAugment
+  sample_rate: 16000
+  min_drop_count: 0
+  max_drop_count: 5
+  band_scaling: 1
+
+# randomly slows down or speeds up the audio
+augment_change_speed:
+  _target_: src.data.preprocess.augment.ChoiceSpeedAugment
+  sample_rate: 16000
+  possible_speed_factors: [0.95, 1, 1.05]
+
+# randomly adds reverb
+augment_add_reverb:
+  _target_: src.data.preprocess.augment.ReverbAugment
+  sample_rate: 16000
+  room_scale_min: 0
+  room_scale_max: 100
+
+# randomly adds uniform noise to the audio
+augment_add_noise:
+  _target_: src.data.preprocess.augment.ChoiceNoiseAugment
+  sample_rate: 16000
+  snr_choices: [15, 20, 100]

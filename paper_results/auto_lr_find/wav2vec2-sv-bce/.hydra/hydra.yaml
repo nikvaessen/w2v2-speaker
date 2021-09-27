@@ -1,0 +1,168 @@
+hydra:
+  run:
+    dir: ${log_folder}/wav2vec_speaker_identification/run/${now:%Y-%m-%d_%H-%M-%S}/${experiment_name}
+  sweep:
+    dir: ${log_folder}/wav2vec_speaker_identification/sweep/${now:%Y-%m-%d_%H-%M-%S}
+    subdir: ${experiment_name}
+  launcher:
+    _target_: hydra._internal.core_plugins.basic_launcher.BasicLauncher
+  sweeper:
+    _target_: hydra._internal.core_plugins.basic_sweeper.BasicSweeper
+    max_batch_size: null
+  help:
+    app_name: ${hydra.job.name}
+    header: '${hydra.help.app_name} is powered by Hydra.
+
+      '
+    footer: 'Powered by Hydra (https://hydra.cc)
+
+      Use --hydra-help to view Hydra specific help
+
+      '
+    template: '${hydra.help.header}
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (group=option)
+
+
+      $APP_CONFIG_GROUPS
+
+
+      == Config ==
+
+      Override anything in the config (foo.bar=value)
+
+
+      $CONFIG
+
+
+      ${hydra.help.footer}
+
+      '
+  hydra_help:
+    template: 'Hydra (${hydra.runtime.version})
+
+      See https://hydra.cc for more info.
+
+
+      == Flags ==
+
+      $FLAGS_HELP
+
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (For example, append hydra/job_logging=disabled
+      to command line)
+
+
+      $HYDRA_CONFIG_GROUPS
+
+
+      Use ''--cfg hydra'' to Show the Hydra config.
+
+      '
+    hydra_help: ???
+  hydra_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][HYDRA] %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+    root:
+      level: INFO
+      handlers:
+      - console
+    loggers:
+      logging_example:
+        level: DEBUG
+    disable_existing_loggers: false
+  job_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][%(name)s][%(levelname)s] - %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+      file:
+        class: logging.FileHandler
+        formatter: simple
+        filename: ${hydra.job.name}.log
+    root:
+      level: INFO
+      handlers:
+      - console
+      - file
+    disable_existing_loggers: false
+  env: {}
+  searchpath: []
+  callbacks: {}
+  output_subdir: .hydra
+  overrides:
+    hydra: []
+    task:
+    - +experiment=speaker_wav2vec2_pairs
+    - tune_model=True
+    - data/module=voxceleb1_pairs
+    - trainer.auto_lr_find=auto_lr_find
+    - tune_iterations=5000
+    - data.dataloader.train_batch_size=8
+  job:
+    name: run
+    override_dirname: +experiment=speaker_wav2vec2_pairs,data.dataloader.train_batch_size=8,data/module=voxceleb1_pairs,trainer.auto_lr_find=auto_lr_find,tune_iterations=5000,tune_model=True
+    id: ???
+    num: ???
+    config_name: train_eval
+    env_set: {}
+    env_copy: []
+    config:
+      override_dirname:
+        kv_sep: '='
+        item_sep: ','
+        exclude_keys: []
+  runtime:
+    version: 1.1.1
+    cwd: /home/nik/workspace/phd/repos/wav2vec_speaker_identification
+    config_sources:
+    - path: hydra.conf
+      schema: pkg
+      provider: hydra
+    - path: /home/nik/workspace/phd/repos/wav2vec_speaker_identification/config
+      schema: file
+      provider: main
+    - path: ''
+      schema: structured
+      provider: schema
+    choices:
+      experiment: speaker_wav2vec2_pairs
+      profiler: null
+      trainer: trainer
+      optim/loss: binary_cross_entropy
+      optim/schedule: one_cycle
+      optim/algo: adam
+      tokenizer: default
+      network: wav2vec2_paired
+      evaluator: cosine_distance
+      data/dataloader: speaker
+      data/shards: shards_voxceleb
+      data/pipeline: wav2vec_pair_pipeline
+      data/module: voxceleb1_pairs
+      callbacks: speaker_default
+      hydra/env: default
+      hydra/callbacks: null
+      hydra/job_logging: default
+      hydra/hydra_logging: default
+      hydra/hydra_help: default
+      hydra/help: default
+      hydra/sweeper: basic
+      hydra/launcher: basic
+      hydra/output: default
+  verbose: false

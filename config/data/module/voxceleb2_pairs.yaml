@@ -1,0 +1,78 @@
+# instantiate the data module config object
+_target_: src.data.modules.speaker.voxceleb.VoxCelebDataModuleConfig
+
+# select which dataset(s) should be used during training
+# note that in practise only voxceleb2 is optional because
+# the test set of voxceleb2 is often all data in voxceleb1)
+use_voxceleb1_dev: true
+use_voxceleb1_test: true
+use_voxceleb2_dev: true
+use_voxceleb2_test: false
+all_voxceleb1_is_test_set: true
+
+# define data kind
+has_train: true
+has_val: true
+has_test: true
+
+# path to identity file for test set
+# Warning: changing the test set while shards
+# are already written has no effect and would require
+# overwriting existing shards.
+test_split_file_path: ${data_folder}/voxceleb_meta/veri_test2.txt
+
+# folder to write train/val/test shards into
+shards_folder: ${data_folder}/voxceleb2_shards_pairs
+
+# temporary working directory for shard creation process
+extraction_folder: ${temp_folder}/voxceleb_2
+
+# determine train/val split
+# `equal` mode means each speaker is in both train and val split
+# `different` mode means intersection of speakers in train and val is empty
+split_mode: different  # one of 'equal`, `different`
+train_val_ratio: -1 # not used because split_mode=different
+num_val_speakers: 41
+
+# number of pairs of validation samples to calculate EER on during training
+eer_validation_pairs: 10_000
+
+# settings related to how data is written to shards
+sequential_same_speaker_samples: 4  # num back-to-back samples from same speaker
+min_unique_speakers_per_shard: 50
+discard_partial_shards: true
+
+
+# The paths to the zipfile containing
+# the voxceleb1 training and test data
+# Values are ignored if `use_voxceleb1=False`
+voxceleb1_train_zip_path: ${data_folder}/voxceleb_archives/vox1_dev_wav.zip
+voxceleb1_test_zip_path: ${data_folder}/voxceleb_archives/vox1_test_wav.zip
+
+# The paths to the zipfile containing
+# the voxceleb2 training and test data
+# Values are ignored if `use_voxceleb2=False`
+voxceleb2_train_zip_path: ${data_folder}/voxceleb_archives/vox2_dev_wav.zip
+voxceleb2_test_zip_path: ${data_folder}/voxceleb_archives/vox2_test_wav.zip
+
+# collation strategy
+train_collate_fn: pad_right
+val_collate_fn: default
+test_collate_fn: default
+
+# add side info (in order to ease debugging data pipeline at the cost of
+# slowing down the iter/sec)
+add_batch_debug_info: False
+
+# limit the amount of samples to a certain amount - useful for debugging
+# whether a model can overfit on a small amount of data.
+# No limit when value is <= 0
+limit_samples: -1
+
+# each sample in a batch consists of two audio samples which are either
+# from the same speaker or from different speakers.
+batch_processing_mode: pairwise_categorical
+
+# distribution of pos/neg pairs in batch
+pos_neg_training_batch_ratio: 0.5
+yield_limit: null

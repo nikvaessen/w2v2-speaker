@@ -1,0 +1,34 @@
+# the scheduler object to use
+scheduler:
+  _target_: torch.optim.lr_scheduler.LambdaLR
+
+  # A function which computes a multiplicative factor given an integer parameter
+  lr_lambda:
+    _target_: src.optim.schedule.tri_stage.TriStageLearningRateLambdaLRFunction
+    max_steps: ${trainer.max_steps}
+    warmup_stage_ratio: 0
+    constant_stage_ratio: 0
+    decay_stage_ratio: 1
+    initial_lr: ${optim.algo.lr}
+    base_lr: ${optim.algo.lr}
+    final_lr: 5e-6
+
+  # epoch number after which to not do any steps any more. '-1' implies never stop
+  last_epoch: -1
+
+  # print to STDOUT when making a step
+  verbose: false
+
+# optional value to track which is fed into the step() call
+# only relevant for learning rate schedulers such
+# as `reduce on plateau`
+monitor: null
+
+# whether to step every epoch or every step
+interval: step
+
+# amount of epochs/steps between consecutive step() calls
+frequency: null
+
+# name to log the learning rate as
+name: null

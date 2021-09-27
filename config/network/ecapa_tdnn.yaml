@@ -1,0 +1,38 @@
+# instantiate the x-vector network lightning module config object
+_target_: src.lightning_modules.speaker.ecapa_tdnn.EcapaTDNNModuleConfig
+
+input_mel_coefficients: ${data.pipeline.filterbank.n_mels}
+lin_neurons: 192
+
+channels:
+  - 1024
+  - 1024
+  - 1024
+  - 1024
+  - 3072
+
+kernel_sizes:
+  - 5
+  - 3
+  - 3
+  - 3
+  - 1
+dilations:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 1
+
+attention_channels: 128
+res2net_scale: 8
+se_channels: 128
+global_context: True
+
+pretrained_weights_path: null
+
+# optional explicit overwrite of embedding size and/or num speakers
+# (e.g if you need to load finetuned weights but want to experiment with another
+# pooling type in the evaluation or test on a dataset with different num speakers)
+explicit_stat_pool_embedding_size: null
+explicit_num_speakers: null

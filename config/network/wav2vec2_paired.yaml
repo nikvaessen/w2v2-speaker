@@ -1,0 +1,48 @@
+# instantiate the x-vector network lightning module config object
+_target_: src.lightning_modules.speaker.wav2vec2_paired_input.Wav2vec2PairedSpeakerModuleConfig
+
+# pretrained weights of wav2vec model
+wav2vec_hunggingface_id: "facebook/wav2vec2-base"
+
+# whether to use reset the pretrained weights
+# and start from a fresh initialization
+reset_weights: false
+
+# initially freeze wav2vec model
+wav2vec_initially_frozen: false
+
+# number of steps before the wav2vec model is unfrozen
+# (if initially frozen at all)
+# if set to null, wav2vec will never be unfrozen
+num_frozen_steps: 10000
+
+# whether to freeze the feature encoder part
+# of the network for the whole training run
+completely_freeze_feature_extractor: true
+
+# whether to freeze the feature projection part
+# of the network for the whole training run
+completely_freeze_feature_projector: false
+
+# probability of regularization techniques during training
+# dropout
+activation_dropout: 0.0  # in feed-forward module of transformer layer
+attention_dropout: 0.1 # in attention module of transformer layer
+feat_proj_dropout: 0.1 # in feature projection module
+hidden_dropout: 0.1 # between residual connections in transformer layer
+
+# layer skip in transformer
+layerdrop: 0.05
+
+# specaugment
+# feature
+mask_feature_length: 10
+mask_feature_prob: 0.0
+
+# time
+mask_time_length: 10
+mask_time_prob: 0.05
+
+# augment on FINAL TOKENS
+final_channel_mask_prob: 0
+final_channel_mask_width: 5

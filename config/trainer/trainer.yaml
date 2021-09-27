@@ -1,0 +1,67 @@
+_target_: pytorch_lightning.Trainer
+
+# set `1` to train on GPU, `0` to train on CPU only
+gpus: ${gpus}
+
+# accelerator:
+# - null is 1 gpu training
+# - `ddp` is multi-gpu training
+accelerator: null
+
+# how many machines to use for multi-gpu training
+num_nodes: 1
+
+# minimum number of epochs to train for
+min_epochs: null
+
+# maximum number of epochs to train for
+max_epochs: null
+
+# minimum number of steps to train for
+min_steps: null
+
+# maximum number of steps to train for
+max_steps: 20000
+
+# due to training dataset having no length we need
+# to manually set the validation epoch interval
+val_check_interval: 1000
+
+# accumulating batches artificially increases
+# the batch size by doing multiple
+# forward steps before a single backward step
+accumulate_grad_batches: 1  # 1300 // 32
+
+# do not output a progress bar if rate = 0
+progress_bar_refresh_rate: 500
+
+# deterministic CUDA operations - true lead to ~20x decrease in speed :(
+deterministic: False
+
+# potentially limit the number of train batches - set to low value for debugging
+limit_train_batches: 1.0
+
+# potentially limit the number of val batches - set to low value for debugging
+limit_val_batches: 1.0
+
+# potentially limit the number of test batches - set to low value for debugging
+limit_test_batches: 1.0
+
+# fast dev run
+# set all three `limit_*_batches to `n` so only `n` batches are used. n=1 if 'true'
+fast_dev_run: false
+
+# either train with 16 (half), 32 (single) or 64 (double) bit precision
+precision: 32
+
+# amount of sanity validation steps to take before training starts
+num_sanity_val_steps: 2
+
+# whether to try auto learning rate finding (this does not actually train the
+# model, set tune_model:true, fit_model:false, eval_model:false in `main.yaml`.
+# set this value to `auto_lr_find` to try it out
+auto_lr_find: False
+
+# apply clipping to the global gradient norm to avoid exploding
+# gradients. Default value of '0' means no clipping is applied
+gradient_clip_val: 0

@@ -1,0 +1,30 @@
+# @package _global_
+
+trainer:
+  _target_: pytorch_lightning.Trainer
+
+  # set `1` to train on (1) GPU, `0` to train on CPU only
+  gpus: ${gpus}
+
+  # useful for debugging
+  limit_train_batches: 10
+  limit_val_batches: 0
+  limit_test_batches: 0
+  fast_dev_run: False
+
+  max_epochs: 1000
+
+callbacks:
+  to_add:
+    - gpu_monitor
+
+data:
+  module:
+    limit_samples: 320
+  shards:
+    initial_fill_buffer_percentage: 0
+    shard_shuffle_queue_size: 0
+    pre_batch_shuffle_queue_size: 0
+  dataloader:
+    num_workers: 0
+    train_batch_size: 32

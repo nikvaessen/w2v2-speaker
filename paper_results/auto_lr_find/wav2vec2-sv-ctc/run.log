@@ -1,0 +1,31 @@
+[2021-09-16 13:56:26,445][pytorch_lightning.utilities.seed][INFO] - Global seed set to 42133724
+[2021-09-16 13:56:28,219][src.main][INFO] - Using callback <<pytorch_lightning.callbacks.lr_monitor.LearningRateMonitor object at 0x7fe9778a9490>>
+[2021-09-16 13:56:28,219][src.main][INFO] - Using callback <<src.callbacks.memory_monitor.RamMemoryMonitor object at 0x7fe977897670>>
+[2021-09-16 13:56:28,220][src.main][INFO] - Using callback <<pytorch_lightning.callbacks.model_checkpoint.ModelCheckpoint object at 0x7fe97788c160>>
+[2021-09-16 13:56:28,225][pytorch_lightning.trainer.connectors.accelerator_connector][INFO] - Using native 16bit precision.
+[2021-09-16 13:56:28,226][pytorch_lightning.utilities.distributed][INFO] - GPU available: True, used: True
+[2021-09-16 13:56:28,226][pytorch_lightning.utilities.distributed][INFO] - TPU available: False, using: 0 TPU cores
+[2021-09-16 13:56:28,226][pytorch_lightning.utilities.distributed][INFO] - IPU available: False, using: 0 IPUs
+[2021-09-16 13:56:28,615][pytorch_lightning.accelerators.gpu][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+[2021-09-16 13:56:30,795][pytorch_lightning.core.lightning][INFO] - 
+  | Name              | Type                  | Params
+------------------------------------------------------------
+0 | loss_fn           | CtcLoss               | 0     
+1 | metric_train_acc  | Accuracy              | 0     
+2 | metric_train_loss | AverageMeter          | 0     
+3 | metric_valid_acc  | Accuracy              | 0     
+4 | wav2vec           | Wav2Vec2WrapperModule | 94.4 M
+5 | embedding_masker  | EmbeddingMasker       | 0     
+6 | stat_pooling      | NoPooling             | 0     
+7 | test_stat_pooling | MeanStdStatPool1D     | 0     
+8 | fc_list           | ModuleList            | 932 K 
+------------------------------------------------------------
+95.3 M    Trainable params
+0         Non-trainable params
+95.3 M    Total params
+381.215   Total estimated model params size (MB)
+[2021-09-16 13:56:34,302][pytorch_lightning.utilities.seed][INFO] - Global seed set to 42133724
+[2021-09-16 14:12:17,607][pytorch_lightning.tuner.lr_finder][INFO] - LR finder stopped early after 3379 steps due to diverging loss.
+[2021-09-16 14:12:17,627][pytorch_lightning.utilities.distributed][INFO] - Restoring states from the checkpoint file at /home/nik/workspace/phd/data/logs/wav2vec_speaker_identification/run/2021-09-16_13-56-24/05cf7a78d19f46128b4c2d4fadf3eaec/lr_find_temp_model.ckpt
+[2021-09-16 14:12:17,947][pytorch_lightning.utilities.distributed][INFO] - Restored all states from the checkpoint file at /home/nik/workspace/phd/data/logs/wav2vec_speaker_identification/run/2021-09-16_13-56-24/05cf7a78d19f46128b4c2d4fadf3eaec/lr_find_temp_model.ckpt
+[2021-09-16 14:12:17,980][pytorch_lightning.tuner.lr_finder][INFO] - Learning rate set to 0.00029977816715823815

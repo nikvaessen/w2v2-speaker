@@ -1,0 +1,23 @@
+# @package _global_
+
+defaults:
+  - override /data/module: voxceleb1_and_2
+  - override /data/pipeline: wav2vec_base_pipeline
+  - override /data/dataloader: speaker
+  - override /data/shards: shards_voxceleb
+  - override /network: wav2vec2_fc
+  - override /optim/algo: adam
+  - override /optim/schedule: one_cycle
+  - override /optim/loss: triplet_ce
+  - override /trainer: trainer
+
+trainer:
+  max_steps: 100_000
+  val_check_interval: 5000
+  precision: 16
+
+project_name: wav2vec2-triplet-ce
+
+data:
+  module:
+    enforce_triplets: true

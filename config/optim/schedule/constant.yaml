@@ -1,0 +1,29 @@
+# the scheduler object to use
+scheduler:
+  _target_: torch.optim.lr_scheduler.StepLR
+
+  # number of epochs between consecutive steps
+  step_size: 1
+
+  # factor by which to multiply the learning rate every `step_size` epochs
+  gamma: 1
+
+  # epoch number after which to not do any steps any more. '-1' implies never stop
+  last_epoch: -1
+
+  # print to STDOUT when making a step
+  verbose: false
+
+# optional value to track which is fed into the step() call
+# only relevant for learning rate schedulers such
+# as `reduce on plateau`
+monitor: null
+
+# whether to step every epoch or every step
+interval: epoch
+
+# amount of epochs/steps between consecutive step() calls
+frequency: null
+
+# name to log the learning rate as
+name: null

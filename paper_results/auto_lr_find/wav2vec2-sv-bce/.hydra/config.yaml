@@ -1,0 +1,169 @@
+data_folder: ${oc.env:DATA_FOLDER}
+temp_folder: ${oc.env:TEMP_FOLDER}
+log_folder: ${oc.env:LOG_FOLDER}
+seed: 42133724
+tune_model: true
+tune_iterations: 5000
+verify_model: false
+fit_model: true
+eval_model: true
+load_network_from_checkpoint: null
+use_cometml: ${oc.decode:${oc.env:USE_COMET_ML}}
+gpus: ${oc.decode:${oc.env:NUM_GPUS}}
+project_name: wav2vec2-paired
+experiment_name: ${random_uuid:}
+tag: ${now:%Y-%m-%d}
+callbacks:
+  to_add:
+  - lr_monitor
+  - ram_monitor
+  - checkpoint
+  lr_monitor:
+    _target_: pytorch_lightning.callbacks.LearningRateMonitor
+  ram_monitor:
+    _target_: src.callbacks.memory_monitor.RamMemoryMonitor
+    frequency: 100
+  checkpoint:
+    _target_: pytorch_lightning.callbacks.model_checkpoint.ModelCheckpoint
+    monitor: val_eer
+    save_top_k: 1
+    mode: min
+    filename: '{epoch}.{step}.{val_eer:.4f}.best'
+    save_last: true
+    every_n_val_epochs: 1
+  last_checkpoint_pattern: '{epoch}.{step}.{val_eer:.4f}.last'
+data:
+  module:
+    _target_: src.data.modules.speaker.voxceleb.VoxCelebDataModuleConfig
+    use_voxceleb1_dev: true
+    use_voxceleb1_test: true
+    use_voxceleb2_dev: false
+    use_voxceleb2_test: false
+    all_voxceleb1_is_test_set: false
+    test_split_file_path: ${data_folder}/voxceleb_meta/veri_test2.txt
+    shards_folder: ${data_folder}/voxceleb1_shards_pairs
+    extraction_folder: ${temp_folder}/voxceleb_1
+    split_mode: different
+    train_val_ratio: -1
+    num_val_speakers: 41
+    eer_validation_pairs: 10000
+    sequential_same_speaker_samples: 4
+    min_unique_speakers_per_shard: 50
+    discard_partial_shards: true
+    voxceleb1_train_zip_path: ${data_folder}/voxceleb_archives/vox1_dev_wav.zip
+    voxceleb1_test_zip_path: ${data_folder}/voxceleb_archives/vox1_test_wav.zip
+    voxceleb2_train_zip_path: ${data_folder}/voxceleb_archives/vox2_dev_wav.zip
+    voxceleb2_test_zip_path: ${data_folder}/voxceleb_archives/vox2_test_wav.zip
+    train_collate_fn: pad_right
+    val_collate_fn: default
+    test_collate_fn: default
+    add_batch_debug_info: false
+    limit_samples: -1
+    batch_processing_mode: pairwise_categorical
+    pos_neg_training_batch_ratio: 0.5
+    yield_limit: null
+  pipeline:
+    train_pipeline:
+    - normalizer
+    - selector_contiguous
+    val_pipeline:
+    - normalizer
+    - selector_start
+    test_pipeline:
+    - normalizer
+    selector_contiguous:
+      _target_: src.data.preprocess.random_chunks.AudioChunkSelector
+      selection_strategy: random
+      desired_chunk_length_sec: 3
+    selector_start:
+      _target_: src.data.preprocess.random_chunks.AudioChunkSelector
+      selection_strategy: start
+      desired_chunk_length_sec: 3
+    filterbank:
+      _target_: src.data.preprocess.audio_features.FilterBank
+    normalizer:
+      _target_: src.data.preprocess.input_normalisation.InputNormalizer2D
+      normalize_over_channels: false
+  shards:
+    _target_: src.data.common.WebDataSetShardConfig
+    samples_per_shard: 5000
+    use_gzip_compression: true
+    shuffle_shards: true
+    queue_size: 1024
+  dataloader:
+    _target_: src.data.common.SpeakerDataLoaderConfig
+    train_batch_size: 8
+    val_batch_size: ${data.dataloader.train_batch_size}
+    test_batch_size: 1
+    num_workers: 5
+    pin_memory: true
+evaluator:
+  _target_: src.evaluation.speaker.cosine_distance.CosineDistanceEvaluator
+  center_before_scoring: false
+  length_norm_before_scoring: false
+  max_num_training_samples: 0
+network:
+  _target_: src.lightning_modules.speaker.wav2vec2_paired_input.Wav2vec2PairedSpeakerModuleConfig
+  wav2vec_hunggingface_id: facebook/wav2vec2-base
+  reset_weights: false
+  wav2vec_initially_frozen: false
+  num_frozen_steps: 10000
+  completely_freeze_feature_extractor: true
+  completely_freeze_feature_projector: false
+  activation_dropout: 0.0
+  attention_dropout: 0.1
+  feat_proj_dropout: 0.1
+  hidden_dropout: 0.1
+  layerdrop: 0.05
+  mask_feature_length: 10
+  mask_feature_prob: 0.0
+  mask_time_length: 10
+  mask_time_prob: 0.05
+  final_channel_mask_prob: 0
+  final_channel_mask_width: 5
+tokenizer:
+  _target_: src.tokenizer.tokenizer_wav2vec2.Wav2vec2TokenizerConfig
+  tokenizer_huggingface_id: facebook/wav2vec2-base-960h
+optim:
+  algo:
+    _target_: torch.optim.Adam
+    lr: 0.0001
+    weight_decay: 0
+    betas:
+    - 0.9
+    - 0.999
+    eps: 1.0e-08
+    amsgrad: false
+  schedule:
+    scheduler:
+      _target_: torch.optim.lr_scheduler.OneCycleLR
+      max_lr: ${optim.algo.lr}
+      total_steps: ${trainer.max_steps}
+      div_factor: 25
+    monitor: null
+    interval: step
+    frequency: null
+    name: null
+  loss:
+    _target_: src.optim.loss.binary_cross_entropy.BinaryCrossEntropyLoss
+trainer:
+  _target_: pytorch_lightning.Trainer
+  gpus: ${gpus}
+  accelerator: null
+  num_nodes: 1
+  min_epochs: null
+  max_epochs: null
+  min_steps: null
+  max_steps: 100000
+  val_check_interval: 5000
+  accumulate_grad_batches: 1
+  progress_bar_refresh_rate: 500
+  deterministic: false
+  limit_train_batches: 1.0
+  limit_val_batches: 1.0
+  limit_test_batches: 1.0
+  fast_dev_run: false
+  precision: 16
+  num_sanity_val_steps: 2
+  auto_lr_find: auto_lr_find
+  gradient_clip_val: 0

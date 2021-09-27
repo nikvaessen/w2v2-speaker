@@ -1,0 +1,6 @@
+- +experiment=speaker_wav2vec2_pairs
+- tune_model=True
+- data/module=voxceleb1_pairs
+- trainer.auto_lr_find=auto_lr_find
+- tune_iterations=5000
+- data.dataloader.train_batch_size=8

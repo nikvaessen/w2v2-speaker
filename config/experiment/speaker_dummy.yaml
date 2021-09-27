@@ -1,0 +1,20 @@
+# @package _global_
+
+defaults:
+  - override /data/module: voxceleb1
+  - override /data/pipeline: xvector_pipeline
+  - override /data/dataloader: speaker
+  - override /data/shards: shards_voxceleb
+  - override /evaluator: cosine_distance
+  - override /network: dummy
+  - override /optim/algo: adam
+  - override /optim/schedule: one_cycle
+  - override /optim/loss: cross_entropy
+  - override /trainer: trainer
+
+trainer:
+  max_steps: 100_000
+  val_check_interval: 5000
+  precision: 16
+
+project_name: dummy-network

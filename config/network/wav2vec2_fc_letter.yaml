@@ -1,0 +1,27 @@
+# instantiate the x-vector network lightning module config object
+_target_: src.lightning_modules.speech.wav2vec2_fc_letter.Wav2vec2FcLetterRecognizerConfig
+
+# pretrained weights of wav2vec model
+wav2vec_hunggingface_id: "facebook/wav2vec2-base"
+
+# whether to use reset the pretrained weights
+# and start from a fresh initialization
+reset_weights: false
+
+# initially freeze wav2vec model
+wav2vec_initially_frozen: false
+
+# whether to freeze the feature encoder part
+# of the network for the whole training run
+completely_freeze_feature_extractor: true
+
+# number of steps before the wav2vec model is unfrozen
+# (if initially frozen at all)
+# if set to null, wav2vec will never be unfrozen
+num_frozen_steps: 10000
+
+# mask (dropout of embedding tensor) settings
+timestep_mask_prob: 0
+timestep_mask_width: 10
+channel_mask_prob: 0
+channel_mask_width: 64

@@ -1,0 +1,7 @@
+_target_: src.optim.loss.aam_softmax.AngularAdditiveMarginSoftMaxLoss
+
+input_features: 1536 # for mean+std embeddings
+output_features: 5994 # only on voxceleb2 dev
+
+margin: 0.2
+scale: 30

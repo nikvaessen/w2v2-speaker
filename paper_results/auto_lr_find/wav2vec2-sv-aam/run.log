@@ -1,0 +1,29 @@
+[2021-09-07 21:55:00,574][pytorch_lightning.utilities.seed][INFO] - Global seed set to 42133724
+[2021-09-07 21:55:02,628][src.main][INFO] - Using callback <<pytorch_lightning.callbacks.lr_monitor.LearningRateMonitor object at 0x7f3092af4940>>
+[2021-09-07 21:55:02,628][src.main][INFO] - Using callback <<src.callbacks.memory_monitor.RamMemoryMonitor object at 0x7f3092af4eb0>>
+[2021-09-07 21:55:02,631][src.main][INFO] - Using callback <<pytorch_lightning.callbacks.model_checkpoint.ModelCheckpoint object at 0x7f3091c64550>>
+[2021-09-07 21:55:02,636][pytorch_lightning.trainer.connectors.accelerator_connector][INFO] - Using native 16bit precision.
+[2021-09-07 21:55:02,637][pytorch_lightning.utilities.distributed][INFO] - GPU available: True, used: True
+[2021-09-07 21:55:02,637][pytorch_lightning.utilities.distributed][INFO] - TPU available: False, using: 0 TPU cores
+[2021-09-07 21:55:02,637][pytorch_lightning.utilities.distributed][INFO] - IPU available: False, using: 0 IPUs
+[2021-09-07 21:55:03,125][pytorch_lightning.accelerators.gpu][INFO] - LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+[2021-09-07 21:55:05,880][pytorch_lightning.core.lightning][INFO] - 
+  | Name              | Type                             | Params
+-----------------------------------------------------------------------
+0 | loss_fn           | AngularAdditiveMarginSoftMaxLoss | 9.2 M 
+1 | metric_train_acc  | Accuracy                         | 0     
+2 | metric_train_loss | AverageMeter                     | 0     
+3 | metric_valid_acc  | Accuracy                         | 0     
+4 | wav2vec           | Wav2Vec2WrapperModule            | 94.4 M
+5 | embedding_masker  | EmbeddingMasker                  | 0     
+6 | stat_pooling      | MeanStdStatPool1D                | 0     
+7 | fc_list           | ModuleList                       | 0     
+-----------------------------------------------------------------------
+103 M     Trainable params
+0         Non-trainable params
+103 M     Total params
+414.314   Total estimated model params size (MB)
+[2021-09-07 21:55:10,051][pytorch_lightning.utilities.seed][INFO] - Global seed set to 42133724
+[2021-09-07 22:18:22,208][pytorch_lightning.utilities.distributed][INFO] - Restoring states from the checkpoint file at /home/nik/workspace/phd/data/logs/wav2vec_speaker_identification/run/2021-09-07_21-54-58/06c91df465da4d55bed874caf6fa1da5/lr_find_temp_model.ckpt
+[2021-09-07 22:18:22,620][pytorch_lightning.utilities.distributed][INFO] - Restored all states from the checkpoint file at /home/nik/workspace/phd/data/logs/wav2vec_speaker_identification/run/2021-09-07_21-54-58/06c91df465da4d55bed874caf6fa1da5/lr_find_temp_model.ckpt
+[2021-09-07 22:18:22,666][pytorch_lightning.tuner.lr_finder][INFO] - Learning rate set to 8.379150674384097e-05

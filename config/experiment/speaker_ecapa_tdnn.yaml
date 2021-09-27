@@ -1,0 +1,31 @@
+# @package _global_
+
+defaults:
+  - override /data/module: voxceleb2
+  - override /data/pipeline: xvector_pipeline
+  - override /data/dataloader: speaker
+  - override /data/shards: shards_voxceleb
+  - override /evaluator: cosine_distance
+  - override /network: ecapa_tdnn
+  - override /optim/algo: adam
+  - override /optim/schedule: one_cycle
+  - override /optim/loss: aam_softmax
+  - override /trainer: trainer
+
+trainer:
+  max_steps: 100_000
+  val_check_interval: 5000
+  precision: 32
+
+data:
+  pipeline:
+    filterbank:
+      n_mels: 40
+
+optim:
+  loss:
+    input_features: 192
+    output_features: 5994 # only on voxceleb2 dev
+
+
+project_name: ecapa-tdnn

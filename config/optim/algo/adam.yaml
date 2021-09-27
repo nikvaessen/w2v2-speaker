@@ -1,0 +1,16 @@
+_target_:  torch.optim.Adam
+
+# learning rate
+lr: 1e-4
+
+# weight decay (l2 regression)
+weight_decay: 0
+
+# beta constants for running mean of gradient and square of gradient
+betas: [0.9, 0.999]
+
+# epsilon term for numerical stability
+eps: 1e-8
+
+# use AMSGRAD version of ADAM
+amsgrad: false

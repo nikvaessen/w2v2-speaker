@@ -1,0 +1,1 @@
+pip install -r requirements/requirements_py1.9_cuda111.txt
