@@ -1,4 +1,4 @@
-# Speaker identification with speech embeddings
+# Fine-tuning wav2vec2 on speaker recognition
 
 ## Installing dependencies 
 
