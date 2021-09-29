@@ -1,4 +1,4 @@
-# Fine-tuning wav2vec2 on speaker recognition
+# Fine-tuning wav2vec2 for speaker recognition
 
 ## Installing dependencies 
 
