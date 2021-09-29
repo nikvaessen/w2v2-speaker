@@ -108,6 +108,10 @@ Note that this process can take a few hours on a fast machine and day(s) on a si
 Make sure to save the `vox2_dev_wav.zip` and `vox2_test_wav.zip` files somewhere secure, so you don't have redo
 this process :).
 
+### Downloading pre-trained models.
+
+You can run `./preparation_scripts/download_pretrained_models.sh` to download the pre-trained models of wav2vec2 to the required `$DATA_DIRECTORY/pretrained_models` directory.
+
 ## Running the experiments
 
 Below we show all the commands for training the specified network. They should reproduce the results in the paper.
