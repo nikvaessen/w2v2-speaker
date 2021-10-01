@@ -1,5 +1,7 @@
 # Fine-tuning wav2vec2 for speaker recognition
 
+This is the code used to run the experiments in https://arxiv.org/abs/2109.15053.
+
 ## Installing dependencies 
 
 If poetry is not installed, see https://python-poetry.org/docs/. We also
