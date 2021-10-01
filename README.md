@@ -1,6 +1,12 @@
 # Fine-tuning wav2vec2 for speaker recognition
 
-This is the code used to run the experiments in https://arxiv.org/abs/2109.15053.
+This is the code used to run the experiments in https://arxiv.org/abs/2109.15053. Detailed logs of each training run can be found here:
+
+* x-vector: https://www.comet.ml/nik-vaessen-ru-nl/xvector-sv-ce?shareable=eVKNVMJUEV0WZd5FxXKeOFl2B
+* ecapa-tdnn: https://www.comet.ml/nik-vaessen-ru-nl/ecapa-tdnn?shareable=Cis9Pp3RMwgirkJQp8wvHWlfs
+* w2v2-ce: https://www.comet.ml/nik-vaessen-ru-nl/wav2vec2-sv-ce?shareable=8B3IJfHK4T1UF1jG0wasPHJb5
+* w2v2-aam: https://www.comet.ml/nik-vaessen-ru-nl/wav2vec2-sv-aam?shareable=wGswdkZvqET0Iy7lmC2ORpMhO
+* w2v2-bce: https://www.comet.ml/nik-vaessen-ru-nl/wav2vec2-sv-bce?shareable=SPGxZGBNAmFaxVsmsDBisFfrU
 
 ## Installing dependencies 
 
