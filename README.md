@@ -24,7 +24,7 @@ Then install all required python packages:
 (xxx) $ poetry update # install dependencies 
 ```
 
-Because PyTorch is currently incorrectly serving the packages on PiPY,
+Because PyTorch is currently serving the packages on PiPY incorrectly,
 we need to use pip to install the specific PyTorch versions we need.
 
 ```bash
@@ -49,7 +49,7 @@ Copy the example environment variables:
 $ cp .env.example .env 
 ```
 
-You can than fill in `.env` accordingly. 
+You can then fill in `.env` accordingly. 
 
 ### Downloading and using voxceleb1 and 2
 
