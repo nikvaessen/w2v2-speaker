@@ -119,9 +119,13 @@ Note that we used a SLURM GPU cluster and each command therefore includes `hydra
 If you want to reproduce these locally these lines need to be removed.
 
 ### wav2vec2-sv-ce
+
 #### auto_lr_find
+
 ```
-python run.py +experiment=speaker_wav2vec2_ce tune_model=True data/module=voxceleb1 trainer.auto_lr_find=auto_lr_find tune_iterations=5000
+python run.py +experiment=speaker_wav2vec2_ce \
+tune_model=True data/module=voxceleb1 \
+trainer.auto_lr_find=auto_lr_find tune_iterations=5000
 ```
 
 5k iters, visually around 1e-4
@@ -131,222 +135,271 @@ python run.py +experiment=speaker_wav2vec2_ce tune_model=True data/module=voxcel
 grid = 1e-5, 5e-5, 9e-5, 1e-4, 2e-4, 5e-4, 1e-3
 
 ```
-python run.py -m +experiment=speaker_wav2vec2_ce data.dataloader.train_batch_size=66 optim.algo.lr=1e-5,5e-5,9e-5,1e-4,2e-4,5e-4,1e-3 hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=7
+python run.py -m +experiment=speaker_wav2vec2_ce \
+data.dataloader.train_batch_size=66 \
+optim.algo.lr=1e-5,5e-5,9e-5,1e-4,2e-4,5e-4,1e-3 \
+hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=7
 ```
 
 #### best performance n=3
 ```
-python run.py -m +experiment=speaker_wav2vec2_ce data.dataloader.train_batch_size=66 optim.algo.lr=9e-5 seed=26160,79927,90537 hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=3
-```
-
-1m steps
-
-```
-python run.py -m +experiment=speaker_wav2vec2_ce data.dataloader.train_batch_size=66 optim.algo.lr=9e-5 seed=528354,850377,850377 hydra/launcher=slurm hydra.launcher.array_parallelism=3 hydra.launcher.timeout_min=20080 trainer.val_check_interval=10_000 trainer.max_steps=1_000_000
+python run.py -m +experiment=speaker_wav2vec2_ce \
+data.dataloader.train_batch_size=66 optim.algo.lr=9e-5 \
+seed=26160,79927,90537 \
+hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=3
 ```
 
 #### best pooling n=3
 
 ```
-python run.py -m +experiment=speaker_wav2vec2_ce data.dataloader.train_batch_size=66 optim.algo.lr=9e-5 seed=168621,597558,440108 network.stat_pooling_type=mean,mean+std,attentive,quantile,first,last,middle,random,max hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=4
-```
-
-pooling first+cls which was not implemented yet
-```
-python run.py -m +experiment=speaker_wav2vec2_ce data.dataloader.train_batch_size=66 optim.algo.lr=9e-5 seed=168621,597558,440108 network.stat_pooling_type=first+cls hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=3
+python run.py -m +experiment=speaker_wav2vec2_ce \
+data.dataloader.train_batch_size=66 optim.algo.lr=9e-5 \
+seed=168621,597558,440108 \
+network.stat_pooling_type=mean,mean+std,attentive,quantile,first,first+cls,last,middle,random,max \
+hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=4
 ```
 
 ### wav2vec2-sv-aam
+
 aam with m=0.2 and s=30
 
 #### auto_lr_find
 ```
-python run.py +experiment=speaker_wav2vec2_ce tune_model=True data/module=voxceleb1 trainer.auto_lr_find=auto_lr_find tune_iterations=5000 optim/loss=aam_softmax
+python run.py +experiment=speaker_wav2vec2_ce \
+tune_model=True data/module=voxceleb1 \
+trainer.auto_lr_find=auto_lr_find tune_iterations=5000 \
+optim/loss=aam_softmax
 ```
 
 #### grid search
+
 ```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=66 optim.algo.lr=1e-5,5e-5,9e-5,1e-4,2e-4,5e-4,1e-3 hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=7
+python run.py -m +experiment=speaker_wav2vec2_aam \
+data.dataloader.train_batch_size=66 \
+optim.algo.lr=1e-5,5e-5,9e-5,1e-4,2e-4,5e-4,1e-3 \
+hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=7
 ```
 same grid 
 
 #### best performance n=3
 ```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 seed=29587,14352,70814 hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=3
-```
-
-1m steps
-
-```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 seed=869881,652906,35122 hydra/launcher=slurm hydra.launcher.array_parallelism=3 hydra.launcher.timeout_min=20080 trainer.val_check_interval=10_000 trainer.max_steps=1_000_000
+python run.py -m +experiment=speaker_wav2vec2_aam \
+data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 \
+seed=29587,14352,70814 \
+hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=3
 ```
 
 #### best pooling n=3
 
 ```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 seed=392401,39265 network.stat_pooling_type=mean,mean+std,attentive,quantile,first,last,middle,random,max hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=4
-```
-
-first+cls token which was not implemented yet
-
-```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 seed=392401,39265,62634 network.stat_pooling_type=first+cls hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=4
+python run.py -m +experiment=speaker_wav2vec2_aam \
+data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 \
+seed=392401,39265,62634  \
+network.stat_pooling_type=mean,mean+std,attentive,quantile,first,first+cls,last,middle,random,max \
+hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=4
 ```
 
 ### wav2vec2-sv-bce
+
 #### auto_lr_find
 ```
-python run.py +experiment=speaker_wav2vec2_pairs tune_model=True data/module=voxceleb1_pairs trainer.auto_lr_find=auto_lr_find tune_iterations=5000
+python run.py +experiment=speaker_wav2vec2_pairs \
+tune_model=True data/module=voxceleb1_pairs \
+trainer.auto_lr_find=auto_lr_find tune_iterations=5000
 ```
+
 #### grid search
+
 5e-6,7e6,9e-6,1e-5,2e-5,3e-5,4e-5,1e-4
 ```
-python run.py -m +experiment=speaker_wav2vec2_pairs optim.algo.lr=5e-6,7e-6,9e-6,1e-5,2e-5,3e-5,4e-5,1e-4 data.dataloader.train_batch_size=32 hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=8
-```
-
-second attempt was done with batch size 16 instead of 32 so other GPUs could be used
-
-```
-python run.py -m +experiment=speaker_wav2vec2_pairs optim.algo.lr=0.00003 data.dataloader.train_batch_size=32 hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=4 seed=154233,979426,971817,931201
+python run.py -m +experiment=speaker_wav2vec2_pairs \
+optim.algo.lr=5e-6,7e-6,9e-6,1e-5,2e-5,3e-5,4e-5,1e-4 \
+data.dataloader.train_batch_size=32 \
+hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=8
 ```
 
 #### best performance n=4
 
 ```
-python run.py -m +experiment=speaker_wav2vec2_pairs optim.algo.lr=0.00003 data.dataloader.train_batch_size=32 hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=4 seed=154233,979426,971817,931201
-```
-
-1m steps (n=3)
-```
-python run.py -m +experiment=speaker_wav2vec2_pairs optim.algo.lr=0.00003 data.dataloader.train_batch_size=32 hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=4 seed=785892,181576,956433 hydra.launcher.timeout_min=20080 trainer.val_check_interval=10_000 trainer.max_steps=1_000_000
-```
-
-### wav2vec2-sv-ctc
-
-#### auto_lr_find
-```
-python run.py +experiment=speaker_wav2vec2_ctc tune_model=True data/module=voxceleb1 trainer.auto_lr_find=auto_lr_find tune_iterations=5000
-```
-
-#### grid search
-1e-5,5e-5,1e-4,2e-4,3e-4,4e-4,5e-4
-```
-python run.py -m +experiment=speaker_wav2vec2_ctc optim.algo.lr=1e-5,5e-5,1e-4,2e-4,3e-4,4e-4,5e-4 data.dataloader.train_batch_size=66 hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=8
-```
-
-#### n=3 100k and 1m
-
-```
-python run.py -m +experiment=speaker_wav2vec2_ctc optim.algo.lr=1e-5 data.dataloader.train_batch_size=66 hydra/launcher=slurm hydra.launcher.array_parallelism=6 hydra.launcher.timeout_min=20080 trainer.val_check_interval=10_000 trainer.max_steps=100_000,1_000_000 seed=214120,33591,917186
+python run.py -m +experiment=speaker_wav2vec2_pairs \
+optim.algo.lr=0.00003 data.dataloader.train_batch_size=32 \
+seed=154233,979426,971817,931201 \
+hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=4 
 ```
 
 ### xvector
+
 #### auto_lr_find
+
 ```
-python run.py +experiment=speaker_xvector tune_model=True data/module=voxceleb1 trainer.auto_lr_find=auto_lr_find tune_iterations=5000
+python run.py +experiment=speaker_xvector \
+tune_model=True data/module=voxceleb1 \
+trainer.auto_lr_find=auto_lr_find tune_iterations=5000
 ```
+
 #### grid search
 1e-5,6e-5,1e-4,2e-4,3e-4,4e-4,8e-4,1e-3
 
 ```
-python run.py -m +experiment=speaker_xvector optim.algo.lr=1e-5,6e-5,1e-4,2e-4,3e-4,4e-4,8e-4,1e-3 data.dataloader.train_batch_size=66 hydra/launcher=slurm hydra.launcher.exclude=cn105 hydra.launcher.array_parallelism=8
+python run.py -m +experiment=speaker_xvector \
+optim.algo.lr=1e-5,6e-5,1e-4,2e-4,3e-4,4e-4,8e-4,1e-3 \
+data.dataloader.train_batch_size=66 \
+hydra/launcher=slurm hydra.launcher.exclude=cn105 hydra.launcher.array_parallelism=8
 ```
 
 #### best performance n=3
 ```
-python run.py -m +experiment=speaker_xvector optim.algo.lr=0.0004 trainer.max_steps=100_000,1_000_000 data.dataloader.train_batch_size=66 hydra/launcher=slurm hydra.launcher.exclude=cn105 hydra.launcher.array_parallelism=6 seed=82713,479728,979292
-```
-
-faster 1M steps
-
-```
-python run.py -m +experiment=speaker_xvector optim.algo.lr=0.0004 trainer.max_steps=1_000_000 data.dataloader.train_batch_size=66 hydra/launcher=slurm hydra.launcher.exclude=cn105 hydra.launcher.array_parallelism=6 seed=82713,479728,979292 trainer.val_check_interval=10_000 data.pipeline.selector_train.selection_strategy=contiguous
+python run.py -m +experiment=speaker_xvector \
+optim.algo.lr=0.0004 trainer.max_steps=100_000 \
+data.dataloader.train_batch_size=66 \
+seed=82713,479728,979292 \
+hydra/launcher=slurm hydra.launcher.exclude=cn105 hydra.launcher.array_parallelism=6 \
 ```
 
 ### ecapa-tdnn
+
 #### auto_lr_find
+
 ```
-python run.py +experiment=speaker_ecapa_tdnn tune_model=True data/module=voxceleb1 trainer.auto_lr_find=auto_lr_find tune_iterations=5000
+python run.py +experiment=speaker_ecapa_tdnn \
+tune_model=True data/module=voxceleb1 \
+trainer.auto_lr_find=auto_lr_find tune_iterations=5000
 ```
 
 #### grid search
+
 5e-6,1e-5,5e-4,1e-4,5e-3,7e-4,9e-4,1e-3
+
 ```
-python run.py -m +experiment=speaker_ecapa_tdnn optim.algo.lr=5e-6,1e-5,5e-4,1e-4,5e-3,7e-4,9e-4,1e-3 data.dataloader.train_batch_size=66 hydra/launcher=slurm hydra.launcher.exclude=cn105 hydra.launcher.array_parallelism=8
+python run.py -m +experiment=speaker_ecapa_tdnn \
+optim.algo.lr=5e-6,1e-5,5e-4,1e-4,5e-3,7e-4,9e-4,1e-3 \
+data.dataloader.train_batch_size=66 \
+hydra/launcher=slurm hydra.launcher.exclude=cn105 hydra.launcher.array_parallelism=8
 ```
 
 #### best performance n=3
 ```
-python run.py -m +experiment=speaker_ecapa_tdnn optim.algo.lr=0.001 trainer.max_steps=100_000,1_000_000 data.dataloader.train_batch_size=66 hydra/launcher=slurm hydra.launcher.exclude=cn105 hydra.launcher.array_parallelism=6 seed=494671,196126,492116
-```
-
-faster 1M steps
-```
-python run.py -m +experiment=speaker_ecapa_tdnn optim.algo.lr=0.001 trainer.max_steps=1_000_000 data.dataloader.train_batch_size=66 hydra/launcher=slurm hydra.launcher.exclude=cn104 hydra.launcher.array_parallelism=3 seed=494671,196126,492116 trainer.val_check_interval=10_000 data.pipeline.selector_train.selection_strategy=contiguous
+python run.py -m +experiment=speaker_ecapa_tdnn \
+optim.algo.lr=0.001 trainer.max_steps=100_000 \
+data.dataloader.train_batch_size=66 \
+seed=494671,196126,492116 \
+hydra/launcher=slurm hydra.launcher.exclude=cn105 hydra.launcher.array_parallelism=6
 ```
 
 ### Ablation
 
 #### baseline
+
 ```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 seed=392401,39265,62634 network.stat_pooling_type=first+cls hydra/launcher=slurm hydra.launcher.array_parallelism=3
+python run.py -m +experiment=speaker_wav2vec2_aam \
+data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 \
+seed=392401,39265,62634 network.stat_pooling_type=first+cls \
+hydra/launcher=slurm hydra.launcher.array_parallelism=3
 ```
 
 #### unfrozen feature extractor
 ```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 seed=914305,386390,865459 network.stat_pooling_type=first+cls hydra/launcher=slurm hydra.launcher.array_parallelism=3 hydra.launcher.exclude=cn104 network.completely_freeze_feature_extractor=False tag=no_freeze 
+python run.py -m +experiment=speaker_wav2vec2_aam \
+data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 \
+seed=914305,386390,865459 network.stat_pooling_type=first+cls \
+network.completely_freeze_feature_extractor=False tag=no_freeze \
+hydra/launcher=slurm hydra.launcher.array_parallelism=3 hydra.launcher.exclude=cn104
 ```
 
 #### no pre-trained weights
 
 ```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 seed=517646,414321,137524 network.stat_pooling_type=first+cls hydra/launcher=slurm hydra.launcher.array_parallelism=3 hydra.launcher.exclude=cn104 network.completely_freeze_feature_extractor=False network.reset_weights=True tag=no_pretrain
+python run.py -m +experiment=speaker_wav2vec2_aam \
+data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 \
+seed=517646,414321,137524 network.stat_pooling_type=first+cls \
+network.completely_freeze_feature_extractor=False network.reset_weights=True tag=no_pretrain \
+hydra/launcher=slurm hydra.launcher.array_parallelism=3 hydra.launcher.exclude=cn104
 ```
 
 #### no layerdrop
 ```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 seed=15249,728106,821754 network.stat_pooling_type=first+cls hydra/launcher=slurm hydra.launcher.array_parallelism=3 network.layerdrop=0.0 tag=no_layer
+python run.py -m +experiment=speaker_wav2vec2_aam \
+data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 \
+seed=15249,728106,821754 network.stat_pooling_type=first+cls \
+network.layerdrop=0.0 tag=no_layer \
+hydra/launcher=slurm hydra.launcher.array_parallelism=3
 ```
 
 #### no dropout
+
 ```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 seed=627687,883727,154405 network.stat_pooling_type=first+cls hydra/launcher=slurm hydra.launcher.array_parallelism=3 network.layerdrop=0.0 network.attention_dropout=0 network.feat_proj_dropout=0 network.hidden_dropout=0 tag=no_drop
+python run.py -m +experiment=speaker_wav2vec2_aam \
+data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 \
+seed=627687,883727,154405 network.stat_pooling_type=first+cls \
+network.layerdrop=0.0 network.attention_dropout=0 \ 
+network.feat_proj_dropout=0 network.hidden_dropout=0 tag=no_drop \
+hydra/launcher=slurm hydra.launcher.array_parallelism=3 
 ```
 
 #### no time masking
 ```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 seed=602400,553540,419322 network.stat_pooling_type=first+cls hydra/launcher=slurm hydra.launcher.array_parallelism=3 network.layerdrop=0.0 network.attention_dropout=0 network.feat_proj_dropout=0 network.hidden_dropout=0 network.mask_time_prob=0 tag=no_mask
+python run.py -m +experiment=speaker_wav2vec2_aam \
+data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 \
+seed=602400,553540,419322 network.stat_pooling_type=first+cls \
+network.layerdrop=0.0 network.attention_dropout=0 network.feat_proj_dropout=0 \
+network.hidden_dropout=0 network.mask_time_prob=0 tag=no_mask \
+hydra/launcher=slurm hydra.launcher.array_parallelism=3 
 ```
 
 
 #### batch size 32
 ```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=32 trainer.max_steps=200_000 optim.algo.lr=0.00005 seed=308966,753370,519822 network.stat_pooling_type=first+cls hydra/launcher=slurm hydra.launcher.array_parallelism=3 tag=bs_32
+python run.py -m +experiment=speaker_wav2vec2_aam \
+data.dataloader.train_batch_size=32 trainer.max_steps=200_000 \
+optim.algo.lr=0.00005 network.stat_pooling_type=first+cls \
+tag=bs_32 seed=308966,753370,519822 \
+hydra/launcher=slurm hydra.launcher.array_parallelism=3 
 ```
 
 #### batch size 128
 ```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=128 trainer.max_steps=50_000 optim.algo.lr=0.00005 seed=54375,585956,637400 network.stat_pooling_type=first+cls hydra/launcher=slurm hydra.launcher.array_parallelism=3 hydra.launcher.exclude=cn104 tag=bs_128
+python run.py -m +experiment=speaker_wav2vec2_aam \
+data.dataloader.train_batch_size=128 trainer.max_steps=50_000 \
+optim.algo.lr=0.00005 seed=54375,585956,637400 \
+network.stat_pooling_type=first+cls tag=bs_128 \
+hydra/launcher=slurm hydra.launcher.array_parallelism=3 hydra.launcher.exclude=cn104
 ```
 
 #### constant lr=3e-6
 
 ```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=66 optim.algo.lr=3e-6 seed=549686,190215,637679 network.stat_pooling_type=first+cls hydra/launcher=slurm hydra.launcher.array_parallelism=3  optim/schedule=constant tag=lr_low
+python run.py -m +experiment=speaker_wav2vec2_aam \
+data.dataloader.train_batch_size=66 optim.algo.lr=3e-6 \
+seed=549686,190215,637679 network.stat_pooling_type=first+cls \
+optim/schedule=constant tag=lr_low \
+hydra/launcher=slurm hydra.launcher.array_parallelism=3 
 ```
 
 #### constant lr=5e-5
 ```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 seed=419703,980724,124995 network.stat_pooling_type=first+cls hydra/launcher=slurm hydra.launcher.array_parallelism=3  optim/schedule=constant tag=lr_same
+python run.py -m +experiment=speaker_wav2vec2_aam \
+data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 \
+seed=419703,980724,124995 network.stat_pooling_type=first+cls \
+optim/schedule=constant tag=lr_same \
+hydra/launcher=slurm hydra.launcher.array_parallelism=3  
 ```
 
 #### tri_stage
 
 ```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 seed=856797,952324,89841 network.stat_pooling_type=first+cls hydra/launcher=slurm hydra.launcher.array_parallelism=3  optim/schedule=tri_stage tag=lr_3stage optim.schedule.scheduler.lr_lambda.initial_lr=1e-7 optim.schedule.scheduler.lr_lambda.final_lr=1e-7
+python run.py -m +experiment=speaker_wav2vec2_aam \
+data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 \
+seed=856797,952324,89841 network.stat_pooling_type=first+cls \
+optim/schedule=tri_stage tag=lr_3stage \
+optim.schedule.scheduler.lr_lambda.initial_lr=1e-7 optim.schedule.scheduler.lr_lambda.final_lr=1e-7 \
+hydra/launcher=slurm hydra.launcher.array_parallelism=3
 ```
 
 #### exp decay
 ```
-python run.py -m +experiment=speaker_wav2vec2_aam data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 seed=962764,682423,707761 network.stat_pooling_type=first+cls hydra/launcher=slurm hydra.launcher.array_parallelism=3  optim/schedule=exp_decay tag=lr_exp_decay optim.schedule.scheduler.lr_lambda.final_lr=1e-7
+python run.py -m +experiment=speaker_wav2vec2_aam \
+data.dataloader.train_batch_size=66 optim.algo.lr=0.00005 seed=962764,682423,707761 \
+network.stat_pooling_type=first+cls optim/schedule=exp_decay tag=lr_exp_decay \
+optim.schedule.scheduler.lr_lambda.final_lr=1e-7 \
+hydra/launcher=slurm hydra.launcher.array_parallelism=3  
 ```
