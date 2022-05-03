@@ -1,12 +1,26 @@
 # Fine-tuning wav2vec2 for speaker recognition
 
-This is the code used to run the experiments in https://arxiv.org/abs/2109.15053. Detailed logs of each training run can be found here:
+This is the code used to run the experiments in https://arxiv.org/abs/2109.15053 and https://ieeexplore.ieee.org/document/9746952/. Detailed logs of each training run can be found here:
 
 * x-vector: https://www.comet.ml/nik-vaessen-ru-nl/xvector-sv-ce?shareable=eVKNVMJUEV0WZd5FxXKeOFl2B
 * ecapa-tdnn: https://www.comet.ml/nik-vaessen-ru-nl/ecapa-tdnn?shareable=Cis9Pp3RMwgirkJQp8wvHWlfs
 * w2v2-ce: https://www.comet.ml/nik-vaessen-ru-nl/wav2vec2-sv-ce?shareable=8B3IJfHK4T1UF1jG0wasPHJb5
 * w2v2-aam: https://www.comet.ml/nik-vaessen-ru-nl/wav2vec2-sv-aam?shareable=wGswdkZvqET0Iy7lmC2ORpMhO
 * w2v2-bce: https://www.comet.ml/nik-vaessen-ru-nl/wav2vec2-sv-bce?shareable=SPGxZGBNAmFaxVsmsDBisFfrU
+
+The work can be cited with the following bibtex entry:
+
+```
+@INPROCEEDINGS{vaessen2022w2v2speaker,
+  author={Vaessen, Nik and Van Leeuwen, David A.},
+  booktitle={ICASSP 2022 - 2022 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP)}, 
+  title={Fine-Tuning Wav2Vec2 for Speaker Recognition}, 
+  year={2022},
+  volume={},
+  number={},
+  pages={7967-7971},
+  doi={10.1109/ICASSP43922.2022.9746952}}
+```
 
 ## Installing dependencies 
 
